@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de QR Local</title>
+    <!-- Tailwind CSS desde CDN -->
+    <script src="https://jsdelivr.net"></script>
+    <!-- Librería QRCode.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-6 font-sans">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Generador de QR</h1>
+        <p class="text-gray-500 mb-6">Ingresa una URL para generar tu código</p>
+
+        <!-- Formulario -->
+        <form id="qrForm" class="space-y-4">
+            <div>
+                <input type="text" id="urlInput" 
+                    placeholder="https://ejemplo.com" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                >
+            </div>
+            <button type="submit" 
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-md transition duration-150 cursor-pointer">
+                Generar Código QR
+            </button>
+        </form>
+
+        <!-- Contenedor del Código QR -->
+        <div class="mt-8 flex justify-center">
+            <div id="qrcode" class="p-4 bg-white border border-gray-200 rounded-xl shadow-sm inline-block"></div>
+        </div>
+
+        <!-- Botón de Descarga (Opcional) -->
+        <div class="mt-6 hidden" id="downloadContainer">
+            <button id="downloadBtn" 
+                class="bg-green-600 hover:bg-green-700 text-white font-medium px-6 py-2 rounded-lg shadow-md transition duration-150 inline-flex items-center space-x-2 cursor-pointer">
+                <svg xmlns="http://w3.org" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Descargar Imagen</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Instancia global de QRCode
+        let qrInstance = null;
+
+        // Función para generar el QR
+        function generarQR(valor) {
+            const contenedor = document.getElementById("qrcode");
+            contenedor.innerHTML = ""; // Limpiar QR previo
+            
+            // Crear el QR usando la librería
+            qrInstance = new QRCode(contenedor, {
+                text: valor,
+                width: 200,
+                height: 200,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // Mostrar el botón de descarga
+            document.getElementById("downloadContainer").classList.remove("hidden");
+        }
+
+        // Lector de parámetros de la URL al cargar
+        window.onload = function() {
+            const params = new URLSearchParams(window.location.search);
+            const urlParam = params.get("url");
+            
+            if (urlParam) {
+                const decodedUrl = decodeURIComponent(urlParam);
+                document.getElementById("urlInput").value = decodedUrl;
+                generarQR(decodedUrl);
+            }
+        };
+
+        // Evento del formulario
+        document.getElementById("qrForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const input = document.getElementById("urlInput").value.trim();
+            
+            if (input) {
+                generarQR(input);
+            } else {
+                alert("Por favor ingresa un texto o URL válida.");
+            }
+        });
+
+        // Lógica para descargar la imagen generada
+        document.getElementById("downloadBtn").addEventListener("click", function() {
+            // QRCode.js genera el QR en una etiqueta img dentro del div
+            const img = document.querySelector("#qrcode img");
+            if (img) {
+                const link = document.createElement('a');
+                link.download = 'codigo-qr.png';
+                link.href = img.src;
+                link.click();
+            }
+        });
+    </script>
+</body>
+</html>
