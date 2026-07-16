@@ -15,9 +15,30 @@ La app permite:
 
 - Introducir un número de teléfono (con código de país, solo dígitos).
 - (Opcional) Añadir un mensaje predefinido.
-- Generar un enlace de WhatsApp.
+- Generar un enlace de WhatsApp válido (`https://wa.me/${cleanPhone}`).
 - Copiar el enlace al portapapeles.
 - Abrir/probar el enlace en una nueva pestaña.
+- Precargar valores desde parámetros de URL (`phone` y `message`).
+
+## Demo / pruebas
+
+Puedes probar la app en:
+
+- https://georgsmeinung.github.io/walinkgen
+
+## Uso con parámetros de URL
+
+La app soporta parámetros en la query string:
+
+- `phone`: número de teléfono (se limpia para dejar solo dígitos).
+- `message`: mensaje predefinido (opcional).
+
+Ejemplos:
+
+- `https://georgsmeinung.github.io/walinkgen?phone=34600123456`
+- `https://georgsmeinung.github.io/walinkgen?phone=34600123456&message=Hola%20Jorge`
+
+Si `phone` está presente y es válido, la app autogenera el enlace al cargar la página.
 
 ## Tecnologías
 
@@ -33,13 +54,3 @@ No requiere build, dependencias ni backend.
 2. Abre `index.html` en tu navegador.
 3. Escribe el teléfono y, si quieres, un mensaje.
 4. Genera y copia el enlace.
-
-## Nota
-
-Actualmente la lógica de construcción del enlace en `index.html` usa este formato en el código:
-
-- `https://wa.me{cleanPhone}`
-
-Para que sea un enlace válido de `wa.me`, debería incluir la barra:
-
-- `https://wa.me/${cleanPhone}`
