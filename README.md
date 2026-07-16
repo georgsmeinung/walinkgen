@@ -2,6 +2,8 @@
 
 Generador Open Source de enlaces de WhatsApp en una **Single-File App**.
 
+<img src="como_funciona.png"/>
+
 ## Qué contiene este repositorio
 
 Este repositorio contiene una aplicación web estática en un solo archivo:
