@@ -1,110 +1,73 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generador Open Source de Links de WhatsApp</title>
-    <!-- Reemplaza tu línea actual por esta versión corregida -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Walink Generator</title>
+  <style>
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .qr-card {
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 16px;
+      background: #fff;
+    }
+
+    #qrcode {
+      width: 256px;
+      height: 256px;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      background: #fafafa;
+      border-radius: 8px;
+    }
+
+    #downloadQrBtn[disabled] {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+<body>
+  <div class="layout">
+    <section>
+      <!-- Tu formulario actual -->
+      <form id="linkForm">
+        <label>Teléfono</label>
+        <input id="phone" type="text" placeholder="54911..." required />
 
-    <div class="bg-white p-6 rounded-2xl shadow-xl max-w-md w-full">
-        <h1 class="text-2xl font-bold text-green-600 mb-2 flex items-center gap-2">
-            <span>💬</span> Generador de Links WA
-        </h1>
-        <p class="text-gray-500 text-sm mb-6">Genera enlaces nativos "wa.me" de forma local y 100% privada.</p>
+        <label>Mensaje</label>
+        <textarea id="message" placeholder="Hola..."></textarea>
 
-        <!-- Formulario -->
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Número de Teléfono (Con código de país, solo números)</label>
-                <input type="text" id="phone" placeholder="Ej: 34600123456" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
-                <small class="text-gray-400 block mt-1">No incluyas el signo "+", espacios ni guiones.</small>
-            </div>
+        <button type="submit">Generar enlace</button>
+      </form>
 
-            <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Mensaje Predefinido (Opcional)</label>
-                <textarea id="message" rows="3" placeholder="Ej: Hola, me interesa más información..." class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"></textarea>
-            </div>
+      <p>
+        Enlace generado:
+        <a id="generatedLink" href="#" target="_blank" rel="noopener noreferrer"></a>
+      </p>
+    </section>
 
-            <button onclick="generateWALink()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-200 cursor-pointer">
-                Generar Enlace Nativo
-            </button>
-        </div>
+    <aside class="qr-card">
+      <h3>QR del enlace</h3>
+      <div id="qrcode" aria-live="polite">Genera un enlace para ver el QR</div>
+      <button id="downloadQrBtn" type="button" disabled>Descargar PNG</button>
+    </aside>
+  </div>
 
-        <!-- Resultados (Ocultos por defecto) -->
-        <div id="result-box" class="mt-6 pt-6 border-t border-gray-200 hidden">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Tu enlace wa.me:</label>
-            <div class="flex gap-2">
-                <input type="text" id="result-url" readonly class="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-600 select-all focus:outline-none">
-                <button onclick="copyToClipboard()" class="bg-gray-800 hover:bg-gray-900 text-white text-sm font-medium px-4 py-2 rounded-lg transition duration-200 cursor-pointer">
-                    Copiar
-                </button>
-            </div>
-            <div class="mt-4 flex gap-2">
-                <a id="btn-test" href="#" target="_blank" class="w-full text-center bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg transition duration-200">
-                    Probar Enlace 🚀
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Lógica en JavaScript Puro -->
-    <script>
-        function generateWALink() {
-            // 1. Limpiar el número de teléfono eliminando caracteres no numéricos
-            const rawPhone = document.getElementById('phone').value;
-            const cleanPhone = rawPhone.replace(/\D/g, ''); 
-            const message = document.getElementById('message').value;
-
-            if (!cleanPhone) {
-                alert("Por favor, introduce un número de teléfono válido.");
-                return;
-            }
-
-            // 2. Construir la URL base usando la API oficial wa.me
-            let waURL = `https://wa.me/${cleanPhone}`;
-
-            // 3. Añadir el mensaje de forma segura codificando los caracteres especiales (URL Encode)
-            if (message.trim() !== "") {
-                const encodedMessage = encodeURIComponent(message);
-                waURL += `?text=${encodedMessage}`;
-            }
-
-            // 4. Mostrar el resultado en pantalla
-            document.getElementById('result-url').value = waURL;
-            document.getElementById('btn-test').href = waURL;
-            document.getElementById('result-box').classList.remove('hidden');
-        }
-
-        function copyToClipboard() {
-            const urlInput = document.getElementById('result-url');
-            urlInput.select();
-            navigator.clipboard.writeText(urlInput.value);
-            alert("¡Enlace copiado al portapapeles!");
-        }
-
-        // 5. Leer parámetros de la URL (ej: ?phone=34600123456&message=Hola)
-        (function prefillFromURLParams() {
-            const params = new URLSearchParams(window.location.search);
-            const phoneParam = params.get('phone');
-            const messageParam = params.get('message');
-
-            if (phoneParam) {
-                const cleanPhone = phoneParam.replace(/\D/g, '');
-                document.getElementById('phone').value = cleanPhone;
-            }
-
-            if (messageParam) {
-                document.getElementById('message').value = messageParam;
-            }
-
-            // Si llega un teléfono válido por URL, generamos automáticamente el enlace
-            if (phoneParam && phoneParam.replace(/\D/g, '') !== '') {
-                generateWALink();
-            }
-        })();
-    </script>
+  <!-- Librería QR -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <!-- Tu JS separado -->
+  <script src="./app.js"></script>
 </body>
 </html>
