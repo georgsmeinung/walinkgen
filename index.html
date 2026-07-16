@@ -46,6 +46,9 @@
                 <a id="btn-test" href="#" target="_blank" class="w-full text-center bg-blue-500 hover:bg-blue-600 text-white text-sm font-semibold py-2 px-4 rounded-lg transition duration-200">
                     Probar Enlace 🚀
                 </a>
+                <a id="btn-qr" href="#" class="w-full text-center bg-purple-600 hover:bg-purple-700 text-white text-sm font-semibold py-2 px-4 rounded-lg transition duration-200">
+                    Generar Código QR
+                </a>
             </div>
         </div>
     </div>
@@ -75,6 +78,11 @@
             // 4. Mostrar el resultado en pantalla
             document.getElementById('result-url').value = waURL;
             document.getElementById('btn-test').href = waURL;
+
+            // NUEVO: pasar la URL generada a qrgen.html como parámetro url codificado
+            const qrURL = `qrgen.html?url=${encodeURIComponent(waURL)}`;
+            document.getElementById('btn-qr').href = qrURL;
+            
             document.getElementById('result-box').classList.remove('hidden');
         }
 
