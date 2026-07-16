@@ -1,4 +1,4 @@
-# walinkgen
+# WhatsApp Link Generator
 
 Generador Open Source de enlaces de WhatsApp en una **Single-File App**.
 
