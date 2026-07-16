@@ -84,6 +84,27 @@
             navigator.clipboard.writeText(urlInput.value);
             alert("¡Enlace copiado al portapapeles!");
         }
+
+        // 5. Leer parámetros de la URL (ej: ?phone=34600123456&message=Hola)
+        (function prefillFromURLParams() {
+            const params = new URLSearchParams(window.location.search);
+            const phoneParam = params.get('phone');
+            const messageParam = params.get('message');
+
+            if (phoneParam) {
+                const cleanPhone = phoneParam.replace(/\D/g, '');
+                document.getElementById('phone').value = cleanPhone;
+            }
+
+            if (messageParam) {
+                document.getElementById('message').value = messageParam;
+            }
+
+            // Si llega un teléfono válido por URL, generamos automáticamente el enlace
+            if (phoneParam && phoneParam.replace(/\D/g, '') !== '') {
+                generateWALink();
+            }
+        })();
     </script>
 </body>
 </html>
