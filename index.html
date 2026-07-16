@@ -64,7 +64,7 @@
             }
 
             // 2. Construir la URL base usando la API oficial wa.me
-            let waURL = `https://wa.me{cleanPhone}`;
+            let waURL = `https://wa.me/${cleanPhone}`;
 
             // 3. Añadir el mensaje de forma segura codificando los caracteres especiales (URL Encode)
             if (message.trim() !== "") {
