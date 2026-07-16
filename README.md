@@ -35,8 +35,8 @@ La app soporta parámetros en la query string:
 
 Ejemplos:
 
-- `https://georgsmeinung.github.io/walinkgen?phone=34600123456`
-- `https://georgsmeinung.github.io/walinkgen?phone=34600123456&message=Hola%20Jorge`
+- https://georgsmeinung.github.io/walinkgen?phone=555123456
+- https://georgsmeinung.github.io/walinkgen?phone=555123456&message=Hola%20Jorge
 
 Si `phone` está presente y es válido, la app autogenera el enlace al cargar la página.
 
